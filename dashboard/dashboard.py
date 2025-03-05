@@ -5,7 +5,7 @@ import seaborn as sns
 
 # Load dataset
 def load_data():
-    df = pd.read_csv("C:/Users/andri/Documents/Andri Martin/Trisakti/Semester 6/DBS_Coding-Camp2025/submission/dashboard/main_data.csv")
+    df = pd.read_csv("dashboard/main_data.csv")
     return df
 
 df = load_data()
