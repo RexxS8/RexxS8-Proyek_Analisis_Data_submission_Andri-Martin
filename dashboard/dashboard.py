@@ -10,10 +10,36 @@ def load_data():
 
 df = load_data()
 
-# Sidebar untuk filter
-st.sidebar.header("Filter Data")
-season = st.sidebar.selectbox("Pilih Musim:", df["season"].unique())
-weather = st.sidebar.selectbox("Pilih Cuaca:", df["weathersit"].unique())
+# Mapping season
+season_dict = {1: "Spring", 2: "Summer", 3: "Fall", 4: "Winter"}
+# Mapping weathersit
+weather_dict = {
+    1: "Clear / Few clouds / Partly cloudy",
+    2: "Mist / Cloudy / Broken clouds",
+    3: "Light Snow / Light Rain / Thunderstorm",
+    4: "Heavy Rain / Snow / Fog"
+}
+
+# Sidebar Filter
+st.sidebar.header("🔍 **Filter Data**")
+
+# Pilihan musim dengan label yang lebih jelas
+season = st.sidebar.selectbox(
+    "📅 **Pilih Musim**",
+    options=df["season"].unique(),
+    format_func=lambda x: season_dict.get(x, "Unknown")
+)
+
+# Pilihan cuaca dengan label yang lebih jelas
+weather = st.sidebar.selectbox(
+    "🌦 **Pilih Kondisi Cuaca**",
+    options=df["weathersit"].unique(),
+    format_func=lambda x: weather_dict.get(x, "Unknown")
+)
+
+# Tampilkan hasil filter dalam teks
+st.sidebar.markdown(f"✅ **Musim dipilih:** {season_dict.get(season, 'Unknown')}")
+st.sidebar.markdown(f"✅ **Kondisi Cuaca dipilih:** {weather_dict.get(weather, 'Unknown')}")
 
 # Filter data berdasarkan input pengguna
 df_filtered = df[(df["season"] == season) & (df["weathersit"] == weather)]
@@ -29,13 +55,7 @@ st.subheader("📌 Pengaruh Kondisi Cuaca terhadap Penyewaan Sepeda")
 weather_effect = df.groupby(['weathersit', 'workingday'])['cnt_days'].mean().reset_index()
 
 # Mapping label untuk kategori cuaca dan hari kerja
-weather_labels = {
-    1: "Clear",
-    2: "Mist/Cloudy",
-    3: "Light Snow/Rain",
-    4: "Heavy Rain/Snow"
-}
-weather_effect['weathersit'] = weather_effect['weathersit'].map(weather_labels)
+weather_effect['weathersit'] = weather_effect['weathersit'].map(weather_dict)
 weather_effect['workingday'] = weather_effect['workingday'].map({0: "Akhir Pekan", 1: "Hari Kerja"})
 
 # Visualisasi dalam bar chart
